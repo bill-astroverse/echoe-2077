@@ -77,8 +77,18 @@ public class NFTInventoryUI : MonoBehaviour
     private void RefreshInventory(List<NFTCharacterData> characters)
     {
         // This overload is called when characters are loaded from Web3Manager
-        // We don't need to do anything here as the factory will handle spawning the characters
-        // and we'll get notified via the NFTCharacterInitialized event
+        ClearCards();
+
+        NFTCharacterFactory factory = FindObjectOfType<NFTCharacterFactory>();
+        if (factory != null)
+        {
+            foreach (var characterData in characters)
+            {
+                // The factory will create the character game object and the card will be created
+                // by the HandleCharacterUpdated event. Here we just ensure the character exists in the factory.
+                factory.GetOrCreateNFTCharacter(characterData);
+            }
+        }
     }
     
     private void HandleCharacterUpdated(NFTCharacterData characterData)
